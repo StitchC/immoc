@@ -1,0 +1,24 @@
+/*
+  css 预处理文件
+*/
+border-1px($color)
+  position: relative
+  /* 字符 '&' 表示父元素 */
+  &:after
+    display: block
+    position: absolute
+    width: 100%
+    left: 0
+    bottom: 0
+    border-top: 1px solid $color
+    content: " "
+
+border-none()
+  &:after
+    display: none
+
+/* 定义不同 dpi 下使用不同的图片*/
+icon-size($url)
+  background-image: url($url + "@2x.png")
+  @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3)
+    background-image: url($url + "@3x.png")
