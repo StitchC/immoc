@@ -168,7 +168,6 @@
               ball.show = true;
               ball.targetElem = target;
               this.dropBalls.push(ball);
-              console.log('drop');
               return;
             }
           }
@@ -184,7 +183,9 @@
         this.fold = true;
       },
       cartListSelect: function(target) {
-        this.drop(target[0]);
+        this.$nextTick(() => {
+          this.drop(target[0]);
+        });
       },
       emptyCart: function() {
         this.selectFood.forEach((food) => {
@@ -207,7 +208,6 @@
             let rect = ball.targetElem.getBoundingClientRect();
             let x = rect.left - 32;
             let y = -(window.innerHeight - rect.top - 22);
-            console.log(x, y);
             el.style.display = '';
             el.style.webkitTransform = 'translate3d(0,' + y + 'px,0)';
             el.style.transform = 'translate3d(0,' + y + 'px,0)';

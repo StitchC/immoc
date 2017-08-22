@@ -3,39 +3,39 @@
      <div class="food-detail-scroll-wrap" ref="foodDetailWrap"  v-show="showFlag">
        <div class="food-detail-wrap">
          <div class="food-photo">
-           <img :src="food.image">
+           <img :src="selectedfood.image">
            <i class="back icon-arrow_lift" v-on:click="back"></i>
          </div>
          <div class="food-content">
-           <h3 class="food-name">{{food.name}}</h3>
+           <h3 class="food-name">{{selectedfood.name}}</h3>
            <div class="food-extra">
-             <span>月售{{food.sellCount}}份</span>
-             <span>好评率{{food.rating}}%</span>
+             <span>月售{{selectedfood.sellCount}}份</span>
+             <span>好评率{{selectedfood.rating}}%</span>
            </div>
            <div class="food-operate">
              <div class="food-price-wrap">
-               <span class="cur-price">￥{{food.price}}</span>
-               <span class="old-price" v-show="food.oldPrice !== ''">￥{{food.oldPrice}}</span>
+               <span class="cur-price">￥{{selectedfood.price}}</span>
+               <span class="old-price" v-show="selectedfood.oldPrice !== ''">￥{{selectedfood.oldPrice}}</span>
              </div>
              <div class="food-count-ctrl">
                <transition name="btn-move">
-                 <span class="add-good-btn" v-on:click.stop.prevent="addFirst($event)" v-show="!food.count || food.count === 0">加入购物车</span>
+                 <span class="add-good-btn" v-on:click.stop="addFirst($event)" v-show="!selectedfood.count || selectedfood.count === 0">加入购物车</span>
                </transition>
-               <good-ctrl v-bind:food="food" v-on:foodselect="selectAnimate" v-show="food.count && food.count > 0"></good-ctrl>
+               <good-ctrl v-bind:food="selectedfood" v-on:foodselect="selectAnimate" v-show="selectedfood.count && selectedfood.count > 0"></good-ctrl>
              </div>
            </div>
          </div>
          <split></split>
          <div class="food-desc">
            <h3>商品介绍</h3>
-           <p>{{food.info}}</p>
+           <p>{{selectedfood.info}}</p>
          </div>
          <split></split>
          <div class="food-ratings">
            <h3 class="rating-title">商品评价</h3>
-           <rating-select v-bind:select-type="selectType" v-bind:only-content="onlyContent" v-bind:desc="desc" v-bind:ratings="food.ratings" v-on:select-change="selectChange" v-on:toggle-content="toggleContent"></rating-select>
-           <ul class="rating-list" v-show="food.ratings.length !== 0">
-             <li v-for="rating in food.ratings" class="rating-item" v-show="ratingShow(rating.rateType, rating.text)">
+           <rating-select v-bind:select-type="selectType" v-bind:only-content="onlyContent" v-bind:desc="desc" v-bind:ratings="selectedfood.ratings" v-on:select-change="selectChange" v-on:toggle-content="toggleContent"></rating-select>
+           <ul class="rating-list" v-show="selectedfood.ratings.length !== 0">
+             <li v-for="rating in selectedfood.ratings" class="rating-item" v-show="ratingShow(rating.rateType, rating.text)">
                 <div class="rating-header">
                   <div class="rating-time">{{rating.rateTime | formateDate}}</div>
                   <div class="user">
@@ -48,7 +48,7 @@
                 </div>
              </li>
            </ul>
-           <div class="no-rating" v-show="food.ratings.length === 0 || !food.ratings">暂无评论</div>
+           <div class="no-rating" v-show="selectedfood.ratings.length === 0 || !selectedfood.ratings">暂无评论</div>
          </div>
        </div>
      </div>
@@ -56,7 +56,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Vue from 'Vue';
   import GoodCtrl from 'components/goodsControl/goodsControl.vue';
   import split from 'components/split/split.vue';
   import BetScroll from 'better-scroll';
@@ -82,7 +81,7 @@
       };
     },
     props: {
-      food: {
+      selectedfood: {
         type: Object
       }
     },
@@ -121,7 +120,7 @@
         if (!event._constructed) {
           return;
         }
-        Vue.set(this.food, 'count', 1);
+        this.$set(this.selectedfood, 'count', 1);
         // 触发动画
         this.$emit('foodselect', [event.target]);
       },
@@ -216,12 +215,14 @@
         font-size: 0
         .food-price-wrap
           display: inline-block
+          vertical-align: middle
           width: 50%
           height: 24px
           line-height: 24px
           .cur-price
             line-height: 24px
-            font-size: 14px
+            margin-right: 4px
+            font-size: 18px
             font-weight: 700
             color: rgb(240,20,20)
           .old-price
@@ -233,6 +234,7 @@
         .food-count-ctrl
           position: relative
           display: inline-block
+          vertical-align: middle
           width: 50%
           height: 24px
           line-height: 24px
@@ -259,9 +261,9 @@
               opacity: 0
           .goodsCtrl-template
             position: absolute
-            top: -5px
+            vertical-align: middle
+            top: -6px
             right: 0
-
     .food-desc
       padding: 18px
       h3

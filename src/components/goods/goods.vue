@@ -40,7 +40,7 @@
       </ul>
     </div>
     <shop-cart v-bind:select-food="selectGoods" v-bind:deliveryPrice="seller.data.deliveryPrice" v-bind:minPrice="seller.data.minPrice" ref="shopcart"></shop-cart>
-    <food-detail v-bind:food="selectFood" v-on:foodselect="foodSelectClick" ref="foodDetail"></food-detail>
+    <food-detail v-bind:selectedfood="selectFood" v-on:foodselect="foodSelectClick" ref="foodDetail"></food-detail>
   </div>
 </template>
 
