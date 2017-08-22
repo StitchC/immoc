@@ -168,6 +168,7 @@
               ball.show = true;
               ball.targetElem = target;
               this.dropBalls.push(ball);
+              console.log('drop');
               return;
             }
           }
@@ -206,6 +207,7 @@
             let rect = ball.targetElem.getBoundingClientRect();
             let x = rect.left - 32;
             let y = -(window.innerHeight - rect.top - 22);
+            console.log(x, y);
             el.style.display = '';
             el.style.webkitTransform = 'translate3d(0,' + y + 'px,0)';
             el.style.transform = 'translate3d(0,' + y + 'px,0)';
@@ -252,7 +254,7 @@
     height: 48px
     line-height: 48px
     background-color: #141d27
-    /*z-index: 50*/
+    z-index: 50
     .content
       display: flex
       .left-content

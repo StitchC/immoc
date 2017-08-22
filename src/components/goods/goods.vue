@@ -15,7 +15,7 @@
         <li v-for="item in goods" class="foods-list-item food-list-hook">
           <h1 class="fodds-menu-title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item border-1px">
+            <li v-for="food in item.foods" class="food-item border-1px" v-on:click="showDetail(food, $event)">
               <div class="food-photo">
                 <img width="57" height="57" v-bind:src="food.icon">
               </div>
@@ -40,6 +40,7 @@
       </ul>
     </div>
     <shop-cart v-bind:select-food="selectGoods" v-bind:deliveryPrice="seller.data.deliveryPrice" v-bind:minPrice="seller.data.minPrice" ref="shopcart"></shop-cart>
+    <food-detail v-bind:food="selectFood" v-on:foodselect="foodSelectClick" ref="foodDetail"></food-detail>
   </div>
 </template>
 
@@ -48,6 +49,8 @@
   import BetScroll from 'better-scroll';
   import shopcart from 'components/shopCart/shopCart.vue';
   import goodsctrl from 'components/goodsControl/goodsControl.vue';
+  import foodDetail from 'components/foodDetail/foodDetail.vue';
+
 
   const ERR_OK = 0;
 
@@ -58,7 +61,8 @@
         menuIconClass: [],
         listHeight: [],
         scrollY: 0,
-        dropElem: null
+        dropElem: null,
+        selectFood: {} // 每次点击商品的时候都保存这个商品详细内容的对象
       };
     },
     props: {
@@ -85,9 +89,10 @@
         });
     },
     components: {
-     'seller-icon': sellerIcon,
+      'seller-icon': sellerIcon,
       'shop-cart': shopcart,
-      'goods-ctrl': goodsctrl
+      'goods-ctrl': goodsctrl,
+      'food-detail': foodDetail
     },
     methods: {
       initBetScroll: function() {
@@ -131,6 +136,13 @@
           this.$nextTick(() => {
             this.$refs.shopcart.drop(target[0]);
           });
+      },
+      showDetail: function(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectFood = food;
+        this.$refs.foodDetail.show();
       }
     },
     computed: {

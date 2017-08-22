@@ -1,14 +1,14 @@
 <template>
   <div class="goodsCtrl-template">
     <transition name="btn-move">
-      <div class="goods-decrease"  v-show="food.count > 0" v-on:click="decreaseGoods">
+      <div class="goods-decrease"  v-show="food.count > 0" v-on:click.stop.prevent="decreaseGoods">
           <span class="icon-remove_circle_outline inner"></span>
       </div>
     </transition>
     <transition name="num-move">
       <div class="goods-count" v-show="food.count > 0">{{food.count}}</div>
     </transition>
-    <div class="goods-add icon-add_circle" v-on:click="addGoods($event)"></div>
+    <div class="goods-add icon-add_circle" v-on:click.stop.prevent="addGoods($event)"></div>
   </div>
 </template>
 
@@ -34,6 +34,7 @@
           Vue.set(this.food, 'count', 1);
         }else {
           this.food.count++;
+          console.log('this food.count has exist');
         }
         // 触发动画
         this.$emit('foodselect', [event.target]);
@@ -42,6 +43,11 @@
           if(this.food.count > 0) {
             this.food.count--;
           }
+      }
+    },
+    watch: {
+      food: function(val, oldVal) {
+        console.log(val);
       }
     }
   };
