@@ -33,7 +33,6 @@
         }else {
           this.food.count++;
         }
-        console.log(this.food);
         // 触发动画
         this.$emit('foodselect', [event.target]);
       },
