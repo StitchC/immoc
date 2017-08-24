@@ -28,7 +28,7 @@
       <rating-select v-bind:select-type="selectType" v-bind:only-content="onlyContent" v-bind:ratings="ratings" v-on:toggle-content="toggleContent" v-on:select-change="selectChange"></rating-select>
       <div class="rating-list-wrap">
         <ul class="rating-list">
-          <li class="rating-item border-1px" v-for="rating in ratings">
+          <li class="rating-item border-1px" v-for="rating in ratings" v-show="ratingShow(rating.rateType, rating.text)">
             <div class="avatar-wrap">
               <img v-bind:src="rating.avatar">
             </div>
@@ -58,7 +58,7 @@
   import star from 'components/star/star.vue';
   import split from 'components/split/split.vue';
   import ratingselect from 'components/ratingSelect/ratingSelect.vue';
-  // import Betscroll from 'better-scroll';
+  import Betscroll from 'better-scroll';
   import {formateDate} from '../../common/js/date.js';
 
   const ALL = 2;
@@ -66,7 +66,7 @@
   export default {
     data: function() {
       return {
-        ratingScroll: null,
+        scroll: null,
         ratings: [],
         selectType: ALL,
         onlyContent: false
@@ -83,9 +83,9 @@
         if(response.errno === ERR_OK) {
           this.ratings = response.data;
           this.$nextTick(() => {
-//            this.scroll = new Betscroll(this.$refs.ratingScroll, {
-//              click: true
-//            });
+            this.scroll = new Betscroll(this.$refs.ratingScroll, {
+              click: true
+            });
           });
         }
       });
@@ -104,9 +104,26 @@
     methods: {
       toggleContent: function(bool) {
         this.onlyContent = bool[0];
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
       },
       selectChange: function(type) {
         this.selectType = type[0];
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      ratingShow: function(type, txt) {
+        if(this.onlyContent === true && (txt === '' || !txt)) {
+          return false;
+        }
+
+        if(this.selectType === ALL) {
+          return true;
+        }else {
+          return type === this.selectType;
+        }
       }
     }
   };
@@ -114,7 +131,13 @@
 
 <style lang="stylus">
   @import "../../common/stylus/mixin.styl"
-
+  .ratings-wrap
+    position: absolute
+    top: 174px
+    left: 0
+    bottom: 0
+    width: 100%
+    overflow: hidden
   .rating-main
     .rating-header
       display: flex

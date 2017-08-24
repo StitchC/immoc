@@ -120,7 +120,7 @@
         if (!event._constructed) {
           return;
         }
-        this.$set(this.selectedfood, 'count', 1);
+         this.$set(this.food, 'count', 1);
         // 触发动画
         this.$emit('foodselect', [event.target]);
       },

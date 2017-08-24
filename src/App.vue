@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- 父组件向字组件传递信息 -->
+    <!-- 父组件向子组件传递信息 -->
     <v-header v-bind:seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
@@ -18,6 +18,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  // 导入模块方法
+  import {urlParse} from 'common/js/util.js';
   // 导入header组件
   import header from 'components/header/header.vue';
 
@@ -27,18 +29,27 @@
     data() {
       return {
         // seller 对象的数据是通过 vue-resource 获取内容的
-        seller: {}
+        seller: {
+
+        },
+        id: (() => {
+          let queryParam = urlParse();
+          console.log(queryParam);
+          return queryParam;
+        })()
       };
     },
     // created 是vue 实例的生命钩子 表示在vue 实例创建的时候要做些什么
     created() {
       // 这里在 vue 实例创建的时候 我们要利用vue-resource 发送一个ajax 请求 获取数据
-      this.$http.get('/api/seller').then((response) => {
+      this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
           // then的回调函数里面有一个参数 保存着数据
           // 这里将response 转换为一个 json对象
           response = response.body;
           if(response.errno === ERR_OK) {
             this.seller = response;
+            this.seller = Object.assign({}, this.id, response);
+            console.log(this.seller);
           }
       });
     },
