@@ -78,16 +78,27 @@
       }
     },
     created: function() {
+      console.log('评论组件创建');
+      console.log(this.$refs.ratingScroll);
       this.$http.get('/api/ratings').then((response) => {
         response = response.body;
         if(response.errno === ERR_OK) {
           this.ratings = response.data;
-          this.$nextTick(() => {
-            this.scroll = new Betscroll(this.$refs.ratingScroll, {
-              click: true
-            });
-          });
         }
+      });
+    },
+    mounted: function() {
+      console.log('评论组件编译完毕');
+      this.$nextTick(() => {
+        this.initScroll();
+        console.log(this.$refs.ratingScroll);
+      });
+    },
+    updated: function() {
+      console.log('评论组件更新完毕');
+      this.$nextTick(() => {
+        this.initScroll();
+        console.log(this.$refs.ratingScroll);
       });
     },
     components: {
@@ -123,6 +134,15 @@
           return true;
         }else {
           return type === this.selectType;
+        }
+      },
+      initScroll: function() {
+        if(!this.scroll) {
+          this.scroll = new Betscroll(this.$refs.ratingScroll, {
+            click: true
+          });
+        }else {
+          this.scroll.refresh();
         }
       }
     }

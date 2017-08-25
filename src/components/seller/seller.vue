@@ -89,13 +89,24 @@
       'seller-icon': SellerIcon
     },
     created: function() {
-      let id = this.seller.id;
-      this.isFavorite = getFromLocal(id, 'favorite');
+      console.log('商家组件创建');
+      console.log(this.seller);
+      this.isFavorite = getFromLocal(this.seller.id, 'favorite', false);
+    },
+    mounted: function() {
       this.$nextTick(() => {
-        this.scroll = new BetScroll(this.$refs.sellerscroll, {
-          click: true
-        });
+        this.initPageScroll();
         this.setPhotoListWidth();
+        console.log('商家组件部署完成');
+        console.log(this.$refs.sellerscroll);
+      });
+    },
+    updated: function() {
+      this.$nextTick(() => {
+        this.initPageScroll();
+        this.setPhotoListWidth();
+        console.log('商家组件更新完成');
+        console.log(this.$refs.sellerscroll);
       });
     },
     computed: {
@@ -111,10 +122,14 @@
           let result = (width + margin) * this.seller.data.pics.length - margin;
           this.$refs.photolist.style.width = result + 'px';
 
-          this.photoscroll = new BetScroll(this.$refs.photolistscroll, {
-            scrollX: true,
-            eventPassthrough: 'vertical'
-          });
+          if(this.photoscroll) {
+            this.photoscroll.refresh();
+          }else {
+            this.photoscroll = new BetScroll(this.$refs.photolistscroll, {
+              scrollX: true,
+              eventPassthrough: 'vertical'
+            });
+          }
         }
       },
       togglefavorite: function() {
@@ -124,6 +139,15 @@
 
         this.isFavorite = !this.isFavorite;
         saveToLocal(this.seller.id, 'favorite', this.isFavorite);
+      },
+      initPageScroll: function() {
+        if(this.scroll) {
+          this.scroll.refresh();
+        }else {
+          this.scroll = new BetScroll(this.$refs.sellerscroll, {
+            click: true
+          });
+        }
       }
     }
   };

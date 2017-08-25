@@ -168,6 +168,7 @@
               ball.show = true;
               ball.targetElem = target;
               this.dropBalls.push(ball);
+              console.log(this.dropBalls);
               return;
             }
           }
@@ -201,7 +202,6 @@
       },
       beforeEnter: function(el) {
         let len = this.balls.length;
-
         for (let i = 0; i < len; i++) {
           let ball = this.balls[i];
           if(ball.show) {
@@ -215,6 +215,9 @@
             let inner = el.querySelectorAll('.inner-hook')[0];
             inner.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
             inner.style.transform = 'translate3d(' + x + 'px,0,0)';
+//            console.log('start');
+//            console.log(this.balls);
+//            console.log(this.dropBalls);
           }
         }
       },
@@ -229,10 +232,14 @@
           let inner = el.querySelectorAll('.inner-hook')[0];
           inner.style.webkitTransform = 'translate3d(0,0,0)';
           inner.style.transform = 'translate3d(0,0,0)';
+          el.addEventListener('transitionend', done);
         });
-        done();
       },
       afterEnter: function(el) {
+        // 因为dropBalls 移出出来的元素是 this.balls 数组中的一个指针
+        // 它指向了 this.balls 中的某一个元素
+        // 所以把移出出来的元素设置其属性 show 是会影响到 this.balls 数组中的元素的
+        // dropBalls 数组只是负责存储当前下坠的小球状态的
         let ball = this.dropBalls.shift();
         if(ball) {
           ball.show = false;
@@ -352,13 +359,13 @@
         left: 32px
         bottom: 22px
         z-index: 200
-        transition: all .4s cubic-bezier(0.49,-0.29,0.75,0.41)
+        transition: all .5s cubic-bezier(0.49,-0.29,0.75,0.41)
         .inner
           width: 16px
           height: 16px
           border-radius: 50%
           background-color: rgb(0,160,220)
-          transition: all .4s linear
+          transition: all .5s linear
     .shopCart-list
       position: absolute
       left: 0
